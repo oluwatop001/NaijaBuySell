@@ -18,6 +18,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script><script src="supabase-client.js"></script>
 <script>
+const REDIRECT_URL="https://oluwatop001.github.io/NaijaBuySell/auth.html";
 let mode="signup";
 const form=document.getElementById("authForm"),email=document.getElementById("email"),password=document.getElementById("password"),
 title=document.getElementById("title"),submitBtn=document.getElementById("submitBtn"),switchBtn=document.getElementById("switchBtn"),
@@ -27,8 +28,8 @@ switchBtn.onclick=()=>{mode=mode==="signup"?"login":"signup";title.textContent=m
 submitBtn.textContent=mode==="signup"?"Create account":"Log in";switchText.textContent=mode==="signup"?"Already have an account?":"Don't have an account?";
 switchBtn.textContent=mode==="signup"?"Log in":"Create account";password.autocomplete=mode==="signup"?"new-password":"current-password";status.style.display="none";};
 form.onsubmit=async e=>{e.preventDefault();status.style.display="none";submitBtn.disabled=true;try{
-let result=mode==="signup"?await NAIJA_SUPABASE.auth.signUp({email:email.value.trim(),password:password.value}):
+let result=mode==="signup"?await NAIJA_SUPABASE.auth.signUp({email:email.value.trim(),password:password.value,options:{emailRedirectTo:REDIRECT_URL}}):
 await NAIJA_SUPABASE.auth.signInWithPassword({email:email.value.trim(),password:password.value});
-if(result.error)throw result.error;if(mode==="signup")msg("Account created. Check your email if confirmation is required, then log in.");else location.href="seller.html";
+if(result.error)throw result.error;if(mode==="signup")msg("Account created. Check your email and tap the verification link. You will return to NaijaBuy&Sell.");else location.href="seller.html";
 }catch(err){msg(err.message||"Something went wrong.");}finally{submitBtn.disabled=false;}};
 </script></body></html>
