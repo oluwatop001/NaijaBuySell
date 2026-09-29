@@ -46,7 +46,7 @@ const listing={seller_id:user.id,title:document.getElementById("title").value.tr
 const {data:created,error:ce}=await NAIJA_SUPABASE.from("listings").insert(listing).select("id").single();if(ce)throw ce;
 for(let i=0;i<files.length;i++){const f=files[i];if(f.size>5*1024*1024)throw new Error("Each image must be 5 MB or smaller.");if(!f.type.startsWith("image/"))throw new Error("Only image files are allowed.");const ext=(f.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,""),path=user.id+"/"+created.id+"/"+Date.now()+"-"+i+"."+ext;
 const {error:up}=await NAIJA_SUPABASE.storage.from("listing-images").upload(path,f,{upsert:false,contentType:f.type});if(up)throw up;
-const {error:ie}=await NAIJA_SUPABASE.from("listing_images").insert({listing_id:created.id,storage_path:path,alt_text:listing.title});if(ie)throw ie;}
+const {error:ie}=await NAIJA_SUPABASE.from("listing_images").insert({listing_id:created.id,storage_path:path});if(ie)throw ie;}
 showStatus("Listing submitted successfully. It will appear publicly after approval.",true);form.reset();preview.innerHTML="";
 }catch(err){showStatus(err.message||"Could not publish the listing.");}finally{publishBtn.disabled=false;}};
 </script></body></html>
