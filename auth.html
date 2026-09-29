@@ -1,0 +1,34 @@
+<!doctype html><html lang="en-NG"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login / Register — NaijaBuy&Sell</title><link rel="stylesheet" href="styles.css">
+<style>
+.authbox{max-width:520px;margin:40px auto;padding:24px;border:1px solid #ddd;border-radius:18px;background:#fff}
+.authbox label{display:block;margin:14px 0 6px;font-weight:600}.authbox input{width:100%;box-sizing:border-box;padding:13px;border:1px solid #ccc;border-radius:10px}
+.authbox button{margin-top:18px;width:100%}.auth-switch{text-align:center;margin-top:16px}.status{margin-top:14px;padding:10px;border-radius:10px;display:none}
+</style></head><body>
+<header class="top"><div class="wrap nav"><a class="brand" href="index.html"><span class="mark">N</span><span>NaijaBuy<span>&</span>Sell</span></a>
+<nav><a href="index.html">Home</a><a href="search.html">Browse</a><a href="categories.html">Categories</a></nav><a class="sell" href="seller.html">Sell an Item</a></div></header>
+<main class="wrap section"><div class="authbox"><span class="eyebrow">ACCOUNT</span>
+<h1 id="title">Create your account</h1><p class="muted">Join NaijaBuy&Sell to buy, sell and connect with other users.</p>
+<form id="authForm"><label>Email<input id="email" type="email" autocomplete="email" required></label>
+<label>Password<input id="password" type="password" minlength="6" required></label>
+<button class="button" id="submitBtn" type="submit">Create account</button></form>
+<div id="status" class="status"></div><div class="auth-switch"><span id="switchText">Already have an account?</span>
+<button id="switchBtn" type="button" class="button light">Log in</button></div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script><script src="supabase-client.js"></script>
+<script>
+let mode="signup";
+const form=document.getElementById("authForm"),email=document.getElementById("email"),password=document.getElementById("password"),
+title=document.getElementById("title"),submitBtn=document.getElementById("submitBtn"),switchBtn=document.getElementById("switchBtn"),
+switchText=document.getElementById("switchText"),status=document.getElementById("status");
+function msg(t){status.textContent=t;status.style.display="block";}
+switchBtn.onclick=()=>{mode=mode==="signup"?"login":"signup";title.textContent=mode==="signup"?"Create your account":"Welcome back";
+submitBtn.textContent=mode==="signup"?"Create account":"Log in";switchText.textContent=mode==="signup"?"Already have an account?":"Don't have an account?";
+switchBtn.textContent=mode==="signup"?"Log in":"Create account";password.autocomplete=mode==="signup"?"new-password":"current-password";status.style.display="none";};
+form.onsubmit=async e=>{e.preventDefault();status.style.display="none";submitBtn.disabled=true;try{
+let result=mode==="signup"?await NAIJA_SUPABASE.auth.signUp({email:email.value.trim(),password:password.value}):
+await NAIJA_SUPABASE.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+if(result.error)throw result.error;if(mode==="signup")msg("Account created. Check your email if confirmation is required, then log in.");else location.href="seller.html";
+}catch(err){msg(err.message||"Something went wrong.");}finally{submitBtn.disabled=false;}};
+</script></body></html>
